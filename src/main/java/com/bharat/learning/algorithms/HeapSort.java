@@ -1,74 +1,65 @@
 package com.bharat.learning.algorithms;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Heapsort
  * Time complexity 
- *      worst case -> nlogn
- *      
+ *      Worst case -> O(n log n)
  * 
  */
 public class HeapSort {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		int[] unsortedArray = {10,6,7,5,15,17,12};
-		
-		sort(unsortedArray);
-		
-		System.out.println(Arrays.toString(unsortedArray));
-		
-		
-	}
+    public static void main(String[] args) {
+        List<Integer> unsortedList = List.of(10, 6, 7, 5, 15, 17, 12);
+        List<Integer> mutableList = new ArrayList<>(unsortedList); // Make it mutable for sorting
 
-	private static void sort(int[] unsortedArray) {
-		
-		for(int i=Math.abs(unsortedArray.length/2);i>=0;i--)	{
-			heapify(unsortedArray,unsortedArray.length,i);
-		}
-		
-		System.out.println(Arrays.toString(unsortedArray));
-		
-		for(int i=(unsortedArray.length-1);i>0;i--)	{
-			swap(unsortedArray, i, 0);
-			heapify(unsortedArray,i,0);
-		}
-	}
-	
-	private static void heapify(int[] unsortedArray, int n, int i) {
-		// TODO Auto-generated method stub
-		int leftChildIndex = 2*i+1;
-		int rightChildIndex= 2*i+2;
-		int largest = i;
-		if(leftChildIndex<n){
-			if(rightChildIndex<n){
-				if(unsortedArray[rightChildIndex]>unsortedArray[leftChildIndex]){
-					largest=rightChildIndex;
-				}
-				else{
-					largest=leftChildIndex;
-				}
-			}
-			else{
-				largest=leftChildIndex;
-			}
-		}
-		if(largest!=i){
-			if(unsortedArray[largest]>unsortedArray[i]){
-				swap(unsortedArray, i, largest);
-				heapify(unsortedArray,n,largest);
-				
-			}
-		}
-		
-				
-		
-	}
+        sort(mutableList);
 
-	private static void swap(int[] unsortedArray, int i, int j) {
-		int temp = unsortedArray[i];
-		unsortedArray[i]=unsortedArray[j];
-		unsortedArray[j]=temp;
-	}
+        System.out.println(mutableList);
+    }
 
+    private static void sort(List<Integer> list) {
+        int n = list.size();
+
+        // Build the heap
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(list, n, i);
+        }
+
+        // Extract elements from the heap one by one
+        for (int i = n - 1; i > 0; i--) {
+            // Move current root to the end
+            Collections.swap(list, i, 0);
+
+            // Call heapify on the reduced heap
+            heapify(list, i, 0);
+        }
+    }
+
+    private static void heapify(List<Integer> list, int n, int i) {
+        int largest = i; // Initialize largest as root
+        int leftChildIndex = 2 * i + 1;
+        int rightChildIndex = 2 * i + 2;
+
+        // Check if left child exists and is greater than the root
+        if (leftChildIndex < n && list.get(leftChildIndex) > list.get(largest)) {
+            largest = leftChildIndex;
+        }
+
+        // Check if right child exists and is greater than the largest so far
+        if (rightChildIndex < n && list.get(rightChildIndex) > list.get(largest)) {
+            largest = rightChildIndex;
+        }
+
+        // If the largest is not the root
+        if (largest != i) {
+            Collections.swap(list, i, largest);
+
+            // Recursively heapify the affected sub-tree
+            heapify(list, n, largest);
+        }
+    }
 }
